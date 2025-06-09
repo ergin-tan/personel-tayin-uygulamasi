@@ -30,40 +30,22 @@ Bu proje, adliye personelinin tayin taleplerini yönetmek için geliştirilmiş 
 
 ## Kurulum
 
-### 1. Local Kurulum
+### 1. DEVELOPMENT KURULUMU
 
 #### Gereksinimler
-- Node.js (v18 veya üzeri önerilir)
-- npm (v6 veya üzeri)
-- PostgreSQL (v12 veya üzeri) veya Docker
+- Docker
 
-#### Önemli Not: Node.js Sürümü
+#### Docker ile Kurulum 
 
-Bu proje Node.js 18.x sürümü ile geliştirilmiş ve test edilmiştir. Farklı Node.js sürümleriyle çalıştırırken sorunlar yaşanabilir. Projeyi çalıştırmadan önce Node.js 18 sürümünü kullandığınızdan emin olun:
-
-```bash
-# Node.js sürümünüzü kontrol edin
-node -v
-
-# Eğer NVM (Node Version Manager) kullanıyorsanız:
-nvm use 18
-
-# Eğer NVM kurulu değilse, Node.js 18'i şu adresten indirebilirsiniz:
-# https://nodejs.org/download/release/latest-v18.x/
-```
-
-Alternatif olarak, proje kök dizininde bir `.nvmrc` dosyası oluşturarak içine "18" yazabilirsiniz. Bu, NVM kullanan geliştiricilerin otomatik olarak doğru Node.js sürümüne geçmesini sağlayacaktır.
-
-#### A. Docker ile Hızlı Kurulum (Önerilen)
-
-Bu yöntem, tüm gerekli servisleri (PostgreSQL, pgAdmin) otomatik olarak kurar ve yapılandırır.
+Bu yöntem, tüm gerekli servisleri (PostgreSQL, pgAdmin) otomatik olarak kurar ve development ortamı için yapılandırır.
 
 1. Docker ve Docker Compose'un kurulu olduğundan emin olun:
 
 ```bash
 docker --version
-docker-compose --version
+docker-compose --version # veya docker compose version
 ```
+
 
 2. Proje dizinine gidin:
 
@@ -71,182 +53,61 @@ docker-compose --version
 cd personel-tayin-uygulamasi
 ```
 
-3. `dockerforlocal` klasöründeki Docker Compose dosyasını kullanarak servisleri başlatın:
 
-```bash
-cd dockerforlocal
-docker-compose up -d
-```
+3. Environment dosyalarını hazırlayın
 
-4. PostgreSQL ve pgAdmin servislerinin başlatıldığını kontrol edin:
+- `backend` klasöründe bulunan env.example dosyasının ismini .env olarak değiştirin ve aşağıdaki değeri güçlü bir SecretKey ile güncelleyin :
 
-```bash
-docker ps
-```
+    ```bash
+    JWT_SECRET=GucluBirJWTSecret
+    ```
 
-5. Veritabanı şemasını oluşturmak için SQL dosyasını PostgreSQL container'ına kopyalayın ve çalıştırın:
+- `frontend` klasöründe bulunan env.example dosyasının ismini .env olarak değiştirin ve aşağıdaki değeri ilgili domain ile güncelleyin :
 
-```bash
-docker cp ../database.sql personel_postgres:/database.sql
-docker exec -it personel_postgres psql -U admin -d personeltayindb -f /database.sql
-```
+    ```bash
+    REACT_APP_API_URL=http://localhost:3001/api
+    ```
 
-6. Backend için .env dosyasını oluşturun:
+4. Projeyi build edin
 
-```bash
-cd ../backend
-cp env.example .env
-```
+    ```bash
+    sudo bash build_docker_images.sh
+    ```
 
-> **Not**: env.example dosyası Docker kurulumuna göre yapılandırılmıştır. Eğer farklı bir kurulum kullanıyorsanız, .env dosyasını buna göre düzenlemeniz gerekebilir.
+5. `dockerforlocal` klasöründeki Docker Compose dosyasını kullanarak servisleri başlatın:
 
-7. Backend bağımlılıklarını yükleyin ve başlatın:
+    ```bash
+    cd dockerforlocal
+    docker-compose up -d # veya docker compose up -d
+    ```
 
-```bash
-npm install
-node index.js
-```
+6. PostgreSQL, pgAdmin servislerinin ve projenin başlatıldığını kontrol edin:
 
-8. Yeni bir terminal açın ve frontend için gerekli bağımlılıkları yükleyin ve başlatın:
+    ```bash
+    docker ps
+    docker logs -f personeltayin
+    ```
 
-```bash
-cd ../frontend
-npm install
-npm start
-```
+> **Not**: env.example dosyası Docker kurulumuna göre yapılandırılmıştır. Eğer farklı bir kurulum kullanıyorsanız, .env dosyasını ve docker compose dosyasını buna göre düzenlemeniz gerekir.
 
-9. Tarayıcınızda `http://localhost:3000` adresine giderek uygulamayı görüntüleyebilirsiniz.
+7. Tarayıcınızda `http://localhost:3000` adresine giderek uygulamayı görüntüleyebilirsiniz.
 
-10. pgAdmin'e erişmek için tarayıcınızda `http://localhost:5050` adresini ziyaret edin ve aşağıdaki bilgilerle giriş yapın:
+8. pgAdmin'e erişmek için tarayıcınızda `http://localhost:5050` adresini ziyaret edin ve aşağıdaki bilgilerle giriş yapın:
     - Email: admin@pg.com
     - Şifre: admin123
 
-11. pgAdmin'de yeni bir sunucu bağlantısı ekleyin:
+9. pgAdmin'de yeni bir sunucu bağlantısı ekleyin:
     - Sağ tıklayın: "Servers" > "Create" > "Server..."
     - "General" sekmesinde bir ad girin (örn: "Personel Tayin DB")
     - "Connection" sekmesinde:
-      - Host: db (Docker Compose servis adı)
+      - Host: postgres (Docker Compose servis adı)
       - Port: 5432
       - Database: personeltayindb
       - Username: admin
       - Password: admin123
 
-#### B. Manuel Kurulum
 
-##### Veritabanı Kurulumu
-
-1. PostgreSQL veritabanı oluşturun:
-
-```sql
-CREATE DATABASE personeltayindb;
-```
-
-2. `database.sql` dosyasını kullanarak tabloları oluşturun:
-
-```bash
-psql -U postgres -d personeltayindb -f database.sql
-```
-
-##### Backend Kurulumu
-
-1. Proje dizinine gidin ve backend klasörüne geçin:
-
-```bash
-cd personel-tayin-uygulamasi/backend
-```
-
-2. Gerekli paketleri yükleyin:
-
-```bash
-npm install
-```
-
-3. `.env` dosyası oluşturun:
-
-```bash
-cp env.example .env
-```
-
-4. `.env` dosyasını düzenleyerek veritabanı bağlantı bilgilerini ve JWT secret'ı ayarlayın:
-
-```
-DB_HOST=localhost  # Docker kullanıyorsanız "postgres" olmalı
-DB_PORT=5432
-DB_USER=postgres   # Veritabanı kullanıcı adınız
-DB_PASSWORD=şifreniz  # Veritabanı şifreniz
-DB_NAME=personeltayindb
-JWT_SECRET=GucluBirJWTSecret
-PORT=3001
-NODE_ENV=development
-CORS_ORIGIN=http://localhost:3000
-```
-
-5. Backend'i başlatın:
-
-```bash
-node index.js
-```
-
-##### Frontend Kurulumu
-
-1. Yeni bir terminal açın ve frontend klasörüne geçin:
-
-```bash
-cd personel-tayin-uygulamasi/frontend
-```
-
-2. Gerekli paketleri yükleyin:
-
-```bash
-npm install
-```
-
-3. Frontend'i başlatın:
-
-```bash
-npm start
-```
-
-4. Tarayıcınızda `http://localhost:3000` adresine giderek uygulamayı görüntüleyebilirsiniz.
-
-#### Admin Hesabı Kullanımı
-
-Veritabanı kurulumu tamamlandıktan sonra, database.sql dosyasında otomatik olarak bir admin hesabı oluşturulur:
-
-- **Sicil No**: 123456
-- **Şifre**: admin
-- **TC Kimlik No**: 12345678901
-- **Email**: admin@adalet.gov.tr
-
-Bu bilgilerle giriş yaparak admin paneline erişebilirsiniz.
-
-#### Sorun Giderme
-
-##### Backend Bağlantı Hatası
-- `.env` dosyasındaki veritabanı bağlantı bilgilerinin doğru olduğundan emin olun
-- PostgreSQL servisinin veya Docker container'ının çalıştığını kontrol edin
-- Belirtilen port'un başka bir uygulama tarafından kullanılmadığından emin olun
-
-##### Frontend Bağlantı Hatası
-- Backend'in çalıştığından emin olun
-- API URL'sinin doğru olduğunu kontrol edin
-
-##### Node.js Sürüm Hatası
-- Projeyi çalıştırmadan önce `nvm use 18` komutunu kullanarak Node.js 18 sürümüne geçiş yapın
-- Node.js 18 kurulu değilse, indirip kurun
-
-##### Docker ile PostgreSQL Sorunları
-- Docker servisinin çalıştığından emin olun
-- Container'ın başarıyla başlatıldığını kontrol edin: `docker ps -a`
-- Container loglarını kontrol edin: `docker logs personel_postgres`
-- Gerekirse container'ı yeniden başlatın: `docker restart personel_postgres`
-
-##### pgAdmin Sorunları
-- pgAdmin'e erişemiyorsanız, servisin çalıştığından emin olun
-- Docker ile pgAdmin kullanıyorsanız, container'ın çalıştığını kontrol edin: `docker ps -a`
----
-
-### 2. Production Deployment
+### 2. PRODUCTION KURULUMU
 
 ### Gereksinimler 
 Ubuntu Noble 24.04 Sunucu içerisine : 
@@ -357,6 +218,18 @@ Sadece aşağıdaki portların açık olması, projenin çalışabilmesi için y
 1. Ana sayfada "Giriş Yap" butonuna tıklayın
 2. Sicil numaranızı ve şifrenizi girin
 3. Giriş yaptıktan sonra kişisel bilgilerinizi görüntüleyebilir ve tayin talebi oluşturabilirsiniz
+
+#### Admin Hesabı Kullanımı
+
+Veritabanı kurulumu tamamlandıktan sonra, database.sql dosyasında otomatik olarak bir admin hesabı oluşturulur:
+
+- **Sicil No**: 123456
+- **Şifre**: admin
+- **TC Kimlik No**: 12345678901
+- **Email**: admin@adalet.gov.tr
+
+Bu bilgilerle giriş yaparak admin paneline erişebilirsiniz.
+
 
 ### Admin Paneli
 
