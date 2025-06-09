@@ -1,0 +1,102 @@
+# Dependencies
+node_modules/
+/.pnp
+.pnp.js
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+pnpm-debug.log*
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.docker
+
+# Build / Production
+/build
+/dist
+/frontend/build
+/backend/dist
+.cache
+
+# Docker
+docker-compose.override.yml
+postgres-data/
+pgdata/
+
+# Testing
+/coverage
+.nyc_output
+/cypress/videos/
+/cypress/screenshots/
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+*.db
+*.sqlite
+*.sqlite3
+
+# Debug
+.debug/
+npm-debug.log*
+
+# Temporary files
+*.swp
+*.bak
+*.tmp
+.temp/
+.tmp/
+*.pid
+*.seed
+*.pid.lock
+
+# Package files
+*.tgz
+*.tar.gz
+*.zip
+
+# React / Frontend specific
+.eslintcache
+.env.development
+.env.production
+/frontend/.eslintcache
+/frontend/coverage
+/frontend/storybook-static
+
+# Backend specific
+/backend/uploads/*
+/backend/coverage
+/backend/tmp
+
+# Misc
+.history/
+.vercel
+.next
+.nuxt
+.out
+.output
+.turbo
+.nvmrc

@@ -1,0 +1,169 @@
+.yeni-talep-form-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 30px;
+  background-color: var(--card-background);
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.yeni-talep-form-container h2 {
+  color: var(--text-color);
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.yeni-talep-form-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.yeni-talep-form-container form > div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.yeni-talep-form-container label {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.yeni-talep-form-container select,
+.yeni-talep-form-container textarea {
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background-color: var(--input-background);
+  color: var(--text-color);
+  font-size: 1em;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.yeni-talep-form-container select:focus,
+.yeni-talep-form-container textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.1);
+}
+
+.yeni-talep-form-container select:disabled,
+.yeni-talep-form-container textarea:disabled {
+  background-color: var(--disabled-background);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.yeni-talep-form-container textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.character-counter {
+  text-align: right;
+  font-size: 0.85em;
+  color: var(--text-muted, #6c757d);
+  margin-top: 4px;
+}
+
+.yeni-talep-form-container button {
+  padding: 12px 24px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-top: 10px;
+}
+
+.yeni-talep-form-container button:hover:not(:disabled) {
+  background-color: var(--primary-hover-color);
+}
+
+.yeni-talep-form-container button:disabled {
+  background-color: var(--disabled-background);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.success-message,
+.error-message {
+  padding: 15px;
+  margin: 15px 0;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.success-message {
+  background-color: var(--success-background);
+  color: var(--success-text);
+}
+
+.error-message {
+  background-color: var(--error-background);
+  color: var(--error-text);
+}
+
+@media (max-width: 768px) {
+  .yeni-talep-form-container {
+    padding: 20px;
+    margin: 15px;
+  }
+
+  .yeni-talep-form-container form {
+    gap: 15px;
+  }
+
+  .yeni-talep-form-container select,
+  .yeni-talep-form-container textarea {
+    padding: 10px;
+    font-size: 0.95em;
+  }
+
+  .yeni-talep-form-container button {
+    padding: 10px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .yeni-talep-form-container {
+    padding: 15px;
+    margin: 10px;
+  }
+
+  .yeni-talep-form-container h2 {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+  }
+
+  .yeni-talep-form-container form {
+    gap: 12px;
+  }
+
+  .yeni-talep-form-container label {
+    font-size: 0.9em;
+  }
+
+  .yeni-talep-form-container select,
+  .yeni-talep-form-container textarea {
+    padding: 8px;
+    font-size: 0.9em;
+  }
+
+  .success-message,
+  .error-message {
+    padding: 12px;
+    font-size: 0.9em;
+  }
+
+  .yeni-talep-form-container button {
+    width: 100%;
+    padding: 12px;
+    font-size: 0.95em;
+  }
+}
