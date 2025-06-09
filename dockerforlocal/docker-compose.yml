@@ -1,7 +1,5 @@
-version: '3.9'
-
 services:
-  db:
+  postgres:
     image: postgres:15
     container_name: personel_postgres
     restart: always
@@ -13,6 +11,7 @@ services:
       - "5432:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
+      - ../database.sql:/docker-entrypoint-initdb.d/database.sql
 
   pgadmin:
     image: dpage/pgadmin4
@@ -24,7 +23,17 @@ services:
     ports:
       - "5050:80"
     depends_on:
-      - db
+      - postgres
 
+  personeltayin:
+    image: personeltayin:latest
+    container_name: personeltayin
+    restart: always
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    depends_on:
+      - postgres
+      
 volumes:
   db-data:
